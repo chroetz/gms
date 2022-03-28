@@ -37,7 +37,7 @@ check_config <- function(icfg, reference_file = "config/default.cfg", modulepath
         if (file.exists(file.path("config", icfg))) icfg <- file.path("config", icfg)
         if (endsWith(icfg, ".Rmd")) {
           tmpFile <- tempfile()
-          knitr::purl(path, documentation = 0, output = tmpFile, quiet = TRUE)
+          knitr::purl(icfg, documentation = 0, output = tmpFile, quiet = TRUE)
           source(tmpFile, local = TRUE) # nolint
         } else {
           source(icfg, local = TRUE) # nolint
