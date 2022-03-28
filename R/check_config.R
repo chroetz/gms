@@ -35,7 +35,13 @@ check_config <- function(icfg, reference_file = "config/default.cfg", modulepath
     if (!is.list(icfg)) {
       if (is.character(icfg)) {
         if (file.exists(file.path("config", icfg))) icfg <- file.path("config", icfg)
-        source(icfg, local = TRUE) # nolint
+        if (endsWith(icfg, ".Rmd")) {
+          tmpFile <- tempfile()
+          knitr::purl(path, documentation = 0, output = tmpFile, quiet = TRUE)
+          source(tmpFile, local = TRUE) # nolint
+        } else {
+          source(icfg, local = TRUE) # nolint
+        }
         if (!is.list(cfg)) stop("Wrong input file format: config file does not contain a cfg list!")
         raw <- paste(readLines(icfg), collapse = " ")
         attr(cfg, "items") <- substring(unique(str_extract_all(raw, "cfg\\$[a-zA-Z0-9_]*")[[1]]), 5)
